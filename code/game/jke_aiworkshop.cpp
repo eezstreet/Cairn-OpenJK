@@ -723,6 +723,60 @@ void Workshop_Set_Leader_f(gentity_t* ent) {
 	selected->client->leader = target;
 }
 
+// Set forward movement override
+void Workshop_Set_MoveForwardOverride_f(gentity_t* ent)
+{
+	if (gi.argc() != 2) {
+		gi.Printf("usage: workshop_set_moveforward <amount>\n");
+		return;
+	}
+
+	int amount = atoi(gi.argv(1));
+	if (amount < -128 || amount > 127) {
+		gi.Printf("The amount must be between -128 and 127.\n");
+		return;
+	}
+
+	gentity_t* selected = &g_entities[selectedAI];
+	selected->client->forced_forwardmove = (signed char)amount;
+}
+
+// Set right movement override
+void Workshop_Set_MoveRightOverride_f(gentity_t* ent)
+{
+	if (gi.argc() != 2) {
+		gi.Printf("usage: workshop_set_moveright <amount>\n");
+		return;
+	}
+
+	int amount = atoi(gi.argv(1));
+	if (amount < -128 || amount > 127) {
+		gi.Printf("The amount must be between -128 and 127.\n");
+		return;
+	}
+
+	gentity_t* selected = &g_entities[selectedAI];
+	selected->client->forced_rightmove = (signed char)amount;
+}
+
+// Set up movement override
+void Workshop_Set_MoveUpOverride_f(gentity_t* ent)
+{
+	if (gi.argc() != 2) {
+		gi.Printf("usage: workshop_set_moveup <amount>\n");
+		return;
+	}
+
+	int amount = atoi(gi.argv(1));
+	if (amount < -128 || amount > 127) {
+		gi.Printf("The amount must be between -128 and 127.\n");
+		return;
+	}
+
+	gentity_t* selected = &g_entities[selectedAI];
+	selected->client->forced_upmove = (signed char)amount;
+}
+
 // Set movetype
 void Workshop_Set_Movetype_f(gentity_t* ent) {
 	if (gi.argc() != 2) {
@@ -1082,6 +1136,9 @@ workshopCmd_t workshopCommands[] = {
 	{ "workshop_set_health", "Sets the NPC's health.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_Health_f },
 	{ "workshop_set_leader", "Gives the NPC a leader - the thing you are looking at.\nYou can use \"me\" or an entity number as an optional argument.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_Leader_f },
 	{ "workshop_set_movetype", "Sets the NPC's movetype. Rather self-explanatory.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_Movetype_f },
+	{ "workshop_set_moveforward", "Overrides forward movement (-128 to 127, walk is -64 and 64, 0 for no override)", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_MoveForwardOverride_f },
+	{ "workshop_set_moveright", "Overrides right movement (-128 to 127, walk is -64 and 64, 0 for no override)", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_MoveRightOverride_f },
+	{ "workshop_set_moveup", "Overrides up movement (-128 to 127, 0 for no override)", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_MoveUpOverride_f },
 	{ "workshop_set_parm", "Sets a parm that can be read with ICARUS.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_Parm_f },
 	{ "workshop_set_rank", "Sets the NPC's rank. Rank has some minor effects on behavior.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_Rank_f },
 	{ "workshop_set_scale", "Sets an NPC's scale.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_Scale_f },

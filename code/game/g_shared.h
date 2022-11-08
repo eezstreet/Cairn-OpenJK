@@ -714,6 +714,7 @@ public:
 //icarus forced moving.  is this still used?
 	signed char		forced_forwardmove;
 	signed char		forced_rightmove;
+	signed char     forced_upmove;
 
 	// timers
 	int			respawnTime;		// can respawn when time > this, force after g_forcerespwan
@@ -809,6 +810,7 @@ public:
 		saved_game.write<int8_t>(noclip);
 		saved_game.write<int8_t>(forced_forwardmove);
 		saved_game.write<int8_t>(forced_rightmove);
+		saved_game.write<int8_t>(forced_upmove);
 		saved_game.write<int32_t>(respawnTime);
 		saved_game.write<int32_t>(idleTime);
 		saved_game.write<int32_t>(airOutTime);
@@ -875,6 +877,7 @@ public:
 		saved_game.read<int8_t>(noclip);
 		saved_game.read<int8_t>(forced_forwardmove);
 		saved_game.read<int8_t>(forced_rightmove);
+		saved_game.read<int8_t>(forced_upmove);
 		saved_game.read<int32_t>(respawnTime);
 		saved_game.read<int32_t>(idleTime);
 		saved_game.read<int32_t>(airOutTime);

@@ -4627,25 +4627,23 @@ void	ClientAlterSpeed(gentity_t *ent, usercmd_t *ucmd, qboolean	controlledByPlay
 	if ( client->forced_forwardmove )
 	{
 		ucmd->forwardmove = client->forced_forwardmove;
-		if ( !client->ps.speed )
-		{
-			if ( ent->NPC != NULL )
-			{
-				client->ps.speed = ent->NPC->stats.runSpeed;
-			}
-			else
-			{
-				client->ps.speed = g_speed->value;//default is 320
-			}
-		}
 	}
 
 	if ( client->forced_rightmove )
 	{
 		ucmd->rightmove = client->forced_rightmove;
-		if ( !client->ps.speed )
+	}
+
+	if (client->forced_upmove)
+	{
+		ucmd->upmove = client->forced_upmove;
+	}
+
+	if (client->forced_forwardmove || client->forced_rightmove || client->forced_upmove)
+	{
+		if (!client->ps.speed)
 		{
-			if ( ent->NPC != NULL  )
+			if (ent->NPC != NULL)
 			{
 				client->ps.speed = ent->NPC->stats.runSpeed;
 			}
