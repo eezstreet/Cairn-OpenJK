@@ -99,14 +99,14 @@ namespace NAV
 {
 	enum
 	{
-		NUM_NODES			= 1024,
+		NUM_NODES			= 16384,
 		// now 5 bytes each
 		NUM_EDGES			= 3*NUM_NODES,
 		NUM_EDGES_PER_NODE	= 20,
 
 
 		NUM_REGIONS			= NUM_NODES/3,	// Had to raise this up for bounty
-		NUM_CELLS			= 32,	// should be the square root of NUM_NODES
+		NUM_CELLS			= 128,	// should be the square root of NUM_NODES
 		NUM_NODES_PER_CELL	= 60,	// had to raise this for t3_bounty
 		NUM_TARGETS			= 5,	// max number of outgoing edges from a given node
 
