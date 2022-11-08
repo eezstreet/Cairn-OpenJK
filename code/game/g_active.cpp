@@ -5374,6 +5374,44 @@ extern cvar_t	*g_skippingcin;
 		}
 	}
 
+	if (ent->client->forced_forwardmove)
+	{
+		ucmd->forwardmove = ent->client->forced_forwardmove;
+		if (abs(ucmd->forwardmove < 65))
+		{
+			ucmd->buttons |= BUTTON_WALKING;
+		}
+	}
+
+	if (ent->client->forced_rightmove)
+	{
+		ucmd->rightmove = ent->client->forced_rightmove;
+		if (abs(ucmd->rightmove < 65))
+		{
+			ucmd->buttons |= BUTTON_WALKING;
+		}
+	}
+
+	if (ent->client->forced_upmove)
+	{
+		ucmd->upmove = ent->client->forced_upmove;
+	}
+
+	if (client->forced_forwardmove || client->forced_rightmove || client->forced_upmove)
+	{
+		if (!client->ps.speed)
+		{
+			if (ent->NPC != NULL)
+			{
+				client->ps.speed = ent->NPC->stats.runSpeed;
+			}
+			else
+			{
+				client->ps.speed = g_speed->value;//default is 320
+			}
+		}
+	}
+
 	//play/stop any looping sounds tied to controlled movement
 	G_CheckMovingLoopingSounds( ent, ucmd );
 
