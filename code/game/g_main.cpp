@@ -759,6 +759,14 @@ void InitGame(  const char *mapname, const char *spawntarget, int checkSum, cons
 	{
 		level.spawntarget[0] = 0;
 	}
+	level.allocatedCombatPoints = COMBAT_POINTS_INITIAL;
+	level.combatPoints = (combatPoint_t*)malloc(sizeof(combatPoint_t) * COMBAT_POINTS_INITIAL);
+	if (level.combatPoints == NULL)
+	{
+		gi.Error(ERR_DROP, "Failed to allocate %llu bytes for combat points", sizeof(combatPoint_t) * COMBAT_POINTS_INITIAL);
+		return;
+	}
+	memset(level.combatPoints, 0, sizeof(combatPoint_t) * COMBAT_POINTS_INITIAL);
 
 
 	G_InitWorldSession();
@@ -852,6 +860,12 @@ Ghoul2 Insert Start
 	/*
 Ghoul2 Insert End
 */
+	// Delete all allocated point_combats
+	if (level.allocatedCombatPoints > 0)
+	{
+		free(level.combatPoints);
+	}
+
 	G_ASPreCacheFree();
 }
 

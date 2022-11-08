@@ -2592,13 +2592,25 @@ SNIPE - Snipers look for these first, NOT IMPLEMENTED
 
 void SP_point_combat( gentity_t *self )
 {
-	if(level.numCombatPoints >= MAX_COMBAT_POINTS)
+	// Reallocate if needed
+	if (level.numCombatPoints >= level.allocatedCombatPoints)
 	{
-#ifndef FINAL_BUILD
-		gi.Printf(S_COLOR_RED"ERROR:  Too many combat points, limit is %d\n", MAX_COMBAT_POINTS);
-#endif
-		G_FreeEntity(self);
-		return;
+		size_t oldAllocatedSize = sizeof(combatPoint_t) * level.allocatedCombatPoints;
+		level.allocatedCombatPoints *= 2;
+
+		size_t newAllocatedSize = sizeof(combatPoint_t) * level.allocatedCombatPoints;
+		combatPoint_t* newAlloc = (combatPoint_t*)malloc(newAllocatedSize);
+
+		if (newAlloc == NULL)
+		{
+			gi.Error(ERR_FATAL, "Failed to allocate %llu bytes for combat points\n", newAllocatedSize);
+			return;
+		}
+
+		memset(newAlloc, 0, newAllocatedSize);
+		memcpy(newAlloc, level.combatPoints, oldAllocatedSize);
+		free(level.combatPoints);
+		level.combatPoints = newAlloc;
 	}
 
 	self->s.origin[2] += 0.125;

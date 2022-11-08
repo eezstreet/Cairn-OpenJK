@@ -141,7 +141,7 @@ typedef struct
 
 //Combat points
 
-#define MAX_COMBAT_POINTS		512
+#define COMBAT_POINTS_INITIAL		512
 
 typedef struct
 {
@@ -289,8 +289,9 @@ public:
 	int			numInterestPoints;
 
 	//Combat points- NPCs in bState BS_COMBAT_POINT will find their closest empty combat_point
-	combatPoint_t	combatPoints[MAX_COMBAT_POINTS];
+	combatPoint_t*	combatPoints;
 	int			numCombatPoints;
+	int			allocatedCombatPoints;
 	char		spawntarget[MAX_QPATH];		// the targetname of the spawnpoint you want the player to start at
 
 	int			dmDebounceTime;

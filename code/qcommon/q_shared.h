@@ -56,6 +56,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #pragma warning(disable : 4786)		// identifier was truncated
 
 #pragma warning(disable : 4996)		// This function or variable may be unsafe.
+#pragma warning(disable : 5208)
 
 #endif
 
