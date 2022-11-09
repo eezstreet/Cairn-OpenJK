@@ -1194,6 +1194,14 @@ void Workshop_Toggle_SmartMove_f(gentity_t* ent) {
 	ai->client->smartMovement = !ai->client->smartMovement;
 }
 
+void Workshop_Delete_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	gi.unlinkentity(ai);
+	ai->inuse = qfalse;
+	ClearInUse(ai);
+	selectedAI = ENTITYNUM_NONE;
+}
+
 
 // Stubs
 void Workshop_Commands_f(gentity_t* ent);
@@ -1273,6 +1281,7 @@ workshopCmd_t workshopCommands[] = {
 	{ "workshop_toggle_walkleft", "Toggles walk-left.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_WalkLeft_f },
 	{ "workshop_toggle_walkright", "Toggles walk-right.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_WalkRight_f },
 	{ "workshop_toggle_smartmove", "Forces Jedi-like movement behavior.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_SmartMove_f },
+	{ "workshop_delete", "Deletes the selected AI (not simply kill)", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Delete_f },
 	{ "", "", 0, NULL },
 };
 
