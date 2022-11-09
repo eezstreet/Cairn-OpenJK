@@ -5365,7 +5365,8 @@ static qboolean Jedi_AttackDecide( int enemy_dist )
 	}
 
 	//try to hit them if we can
-	if ( !enemy_in_striking_range )
+	if ( !enemy_in_striking_range && 
+		(NPC->s.weapon == WP_SABER || NPC->s.weapon == WP_MELEE))
 	{
 		return qfalse;
 	}
@@ -5942,7 +5943,7 @@ static void Jedi_Combat( void )
 	}
 
 	//if ( !enemy_lost )
- 	if (NPC->client->NPC_class != CLASS_BOBAFETT)
+ 	if (NPC->client->NPC_class != CLASS_BOBAFETT && !NPC->client->smartMovement)
 	{
 		//Update our seen enemy position
 		if ( !NPC->enemy->client || ( NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE && NPC->client->ps.groundEntityNum != ENTITYNUM_NONE ) )
@@ -7638,7 +7639,7 @@ void NPC_BSJedi_Default( void )
 	{//don't have an enemy, look for one
 		if ( NPC->client->NPC_class == CLASS_BOBAFETT
 			|| (NPC->client->NPC_class == CLASS_REBORN && NPC->s.weapon != WP_SABER)
-			|| NPC->client->NPC_class == CLASS_ROCKETTROOPER )
+			|| NPC->client->NPC_class == CLASS_ROCKETTROOPER)
 		{
 			NPC_BSST_Patrol();
 		}
