@@ -711,10 +711,13 @@ void	Boba_Fire()
 
 			// Occasionally Alt Fire
 			//-----------------------
-			if (NPCInfo->scriptFlags&SCF_ALT_FIRE)
+			if (NPC->client->NPC_class == CLASS_BOBAFETT)
 			{
-				ucmd.buttons &= ~BUTTON_ATTACK;
-				ucmd.buttons |=  BUTTON_ALT_ATTACK;
+				if (NPCInfo->scriptFlags & SCF_ALT_FIRE)
+				{
+					ucmd.buttons &= ~BUTTON_ATTACK;
+					ucmd.buttons |= BUTTON_ALT_ATTACK;
+				}
 			}
 			break;
 		}

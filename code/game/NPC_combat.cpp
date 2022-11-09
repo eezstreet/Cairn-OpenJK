@@ -1544,7 +1544,7 @@ qboolean NPC_EnemyTooFar(gentity_t *enemy, float dist, qboolean toShoot)
 		dist = VectorLengthSquared(vec);
 	}
 
-	if(dist > NPC_MaxDistSquaredForWeapon())
+	if(dist > (NPCInfo->stats.visrange * NPCInfo->stats.visrange))
 		return qtrue;
 
 	return qfalse;
