@@ -6333,7 +6333,8 @@ static void Jedi_Patrol( void )
 						//if the enemy is close enough, or threw his saber, take him as the enemy
 						//FIXME: what if he throws a thermal detonator?
 						//FIXME: use jediSpeechDebounceTime[NPC->client->playerTeam] < level.time ) check for anger sound
-						if ( enemy_dist < (220*220) || ( NPCInfo->investigateCount>= 3 && NPC->client->ps.SaberActive() ) )
+						if ( (NPC->client->smartMovement && (enemy_dist < (NPCInfo->stats.visrange * NPCInfo->stats.visrange))) ||
+							(enemy_dist < (220*220) || ( NPCInfo->investigateCount>= 3 && NPC->client->ps.SaberActive() ) ))
 						{
 							G_SetEnemy( NPC, enemy );
 							//NPCInfo->behaviorState = BS_HUNT_AND_KILL;//should be auto now
