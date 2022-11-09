@@ -619,6 +619,7 @@ void Workshop_Set_Weapon_f(gentity_t* ent) {
 	selected->client->ps.weapon = weaponNum;
 	selected->client->ps.weaponstate = WEAPON_RAISING;
 	ChangeWeapon(selected, weaponNum);
+	G_RemoveWeaponModels(selected);
 	if (weaponNum == WP_SABER)
 	{
         WP_SaberInitBladeData( selected );
