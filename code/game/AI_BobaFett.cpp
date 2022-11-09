@@ -306,6 +306,11 @@ qboolean Boba_StopKnockdown( gentity_t *self, gentity_t *pusher, const vec3_t pu
 		return qtrue;
 	}
 
+	if (self->client->bobaDisabledAbilities & (1 << BA_ANTIKNOCKDOWN))
+	{
+		return qfalse;
+	}
+
 	vec3_t	pDir, fwd, right, ang = {0, self->currentAngles[YAW], 0};
 	float	fDot, rDot;
 	int		strafeTime = Q_irand( 1000, 2000 );
@@ -404,7 +409,8 @@ void	Boba_Pain( gentity_t *self, gentity_t *inflictor, int damage, int mod)
 void Boba_FlyStart( gentity_t *self )
 {//switch to seeker AI for a while
 	if ( TIMER_Done( self, "jetRecharge" )
-		&& !Boba_Flying( self ) )
+		&& !Boba_Flying( self ) 
+		&& !(self->client->bobaDisabledAbilities & (1 << BA_JETPACK)))
 	{
 		self->client->ps.gravity = 0;
 		self->svFlags |= SVF_CUSTOM_GRAVITY;
@@ -800,7 +806,7 @@ void	Boba_TacticsSelect()
 	{
 		nextState = BTS_RIFLE;
 	}
-	else if (enemyInFlameRange)
+	else if (enemyInFlameRange && !(NPC->client->bobaDisabledAbilities & (1 << BA_FLAMETHROW)))
 	{
 		// If It's Been Long Enough Since Our Last Flame Blast, Try To Torch The Enemy
 		//-----------------------------------------------------------------------------
@@ -819,7 +825,7 @@ void	Boba_TacticsSelect()
 
 	// Recently Saw The Enemy, Time For Some Good Ole Fighten!
 	//---------------------------------------------------------
-	else if (enemyRecentlySeen)
+	else if (enemyRecentlySeen && !(NPC->client->bobaDisabledAbilities & (1 << BA_MISSILE)))
 	{
 		// At First, Boba will prefer to use his blaster against the player, but
 		//  the more times he is driven away (NPC->count), he will be less likely to
@@ -829,7 +835,7 @@ void	Boba_TacticsSelect()
 
 	// Hmmm...  Havn't Seen The Player In A While, We Might Want To Try Something Sneaky
 	//-----------------------------------------------------------------------------------
-	else
+	else if (!(NPC->client->bobaDisabledAbilities & (1 << BA_SNIPER)))
 	{
 		bool	SnipePointsNear = false;		 // TODO
 		bool	AmbushPointNear = false;		 // TODO
@@ -1111,7 +1117,8 @@ void	Boba_Update()
 	//---------------------------------------------
 	if ( NPC->client->ps.groundEntityNum == ENTITYNUM_NONE
 		&& NPC->client->ps.forceJumpZStart
-		&& !Q_irand( 0, 10 ) )
+		&& !Q_irand( 0, 10 ) 
+		&& !(NPC->client->bobaDisabledAbilities & (1 << BA_JETPACK)))
 	{//take off
 		Boba_FlyStart( NPC );
 	}

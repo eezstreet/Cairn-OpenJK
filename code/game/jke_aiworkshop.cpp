@@ -587,7 +587,7 @@ void Workshop_Set_Aiflags_f(gentity_t* ent) {
 	}
 	int scriptFlags = atoi(gi.argv(1));
 	if (scriptFlags < 0) {
-		gi.Printf("Invalid scriptflags.\n");
+		gi.Printf("Invalid ai flags.\n");
 		return;
 	}
 	g_entities[selectedAI].NPC->aiFlags = scriptFlags;
@@ -1090,6 +1090,33 @@ void Workshop_Toggle_Follow_f(gentity_t* ent) {
 	}
 }
 
+// List all of the abilities that bobafett has
+void Workshop_List_BobaAbilities_f(gentity_t* ent) {
+	PRINTFLAG(BA_FLAMETHROW);
+	PRINTFLAG(BA_ROLL);
+	PRINTFLAG(BA_JETPACK);
+	PRINTFLAG(BA_ANTIKNOCKDOWN);
+	PRINTFLAG(BA_SNIPER);
+	PRINTFLAG(BA_MISSILE);
+	PRINTFLAG(BA_JUMP);
+}
+
+// List all of the 
+void Workshop_Set_BobaAbilities_f(gentity_t * ent) {
+	if (gi.argc() != 2) {
+		gi.Printf("usage: workshop_disable_boba_abilities <flags>\n");
+		return;
+	}
+
+	gentity_t* ai = &g_entities[selectedAI];
+	int bobaAbilities = atoi(gi.argv(1));
+	if (bobaAbilities < 0) {
+		gi.Printf("Invalid boba abilities\n");
+		return;
+	}
+	g_entities[selectedAI].client->bobaDisabledAbilities = bobaAbilities;
+}
+
 // Stubs
 void Workshop_Commands_f(gentity_t* ent);
 void Workshop_CmdHelp_f(gentity_t* ent);
@@ -1157,6 +1184,8 @@ workshopCmd_t workshopCommands[] = {
 	{ "workshop_notarget", "Uses the notarget cheat (can't be seen by enemies) on an NPC. Some NPCs have notarget on by default.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Notarget_f },
 	{ "workshop_undying", "Uses the undead mode cheat (cannot die) on an NPC.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Undying_f },
 	{ "workshop_shielding", "Toggles a blaster-protecting shield on an NPC.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Shielding_f },
+	{ "workshop_list_boba_abilities", "List all abilities for Boba Fett AI type.", WSFLAG_ONLYINWS, Workshop_List_BobaAbilities_f },
+	{ "workshop_disable_boba_abilities", "CLASS_BOBAFETT only: disable certain abilities", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_BobaAbilities_f },
 	{ "", "", 0, NULL },
 };
 

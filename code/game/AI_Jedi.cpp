@@ -2894,7 +2894,8 @@ qboolean Jedi_InNoAIAnim( gentity_t *self )
 void Jedi_CheckJumpEvasionSafety( gentity_t *self, usercmd_t *cmd, evasionType_t evasionType )
 {
 	if ( evasionType != EVASION_OTHER//not a FlipEvasion, which does it's own safety checks
-		&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE )
+		&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE 
+		&& !(self->client->bobaDisabledAbilities & (1 << BA_JUMP)))
 	{//on terra firma right now
 		if ( NPC->client->ps.velocity[2] > 0
 			|| NPC->client->ps.forceJumpCharge
@@ -3068,6 +3069,7 @@ evasionType_t Jedi_SaberBlockGo( gentity_t *self, usercmd_t *cmd, vec3_t pHitloc
 				|| (self->client->NPC_class == CLASS_REBORN && self->s.weapon != WP_SABER) //non-saber reborn (cultist)
 			)
 			&& !Q_irand( 0, 2 )
+			&& !(self->client->bobaDisabledAbilities & (1 << BA_ROLL))
 		)
 	{
 		doRoll = qtrue;
@@ -3313,7 +3315,7 @@ evasionType_t Jedi_SaberBlockGo( gentity_t *self, usercmd_t *cmd, vec3_t pHitloc
 			}
 		}
 	}
-	else
+	else if (!(self->client->bobaDisabledAbilities & (1 << BA_JUMP)))
 	{
 		if ( saberBusy || (zdiff < -36 && ( zdiff < -44 || !Q_irand( 0, 2 ) ) ) )//was -30 and -40//2nd one was -46
 		{//jump!

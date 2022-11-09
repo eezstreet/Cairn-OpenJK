@@ -681,6 +681,17 @@ typedef enum //# movetype_e
 	NUM_MOVETYPES
 } movetype_t;
 
+typedef enum
+{
+	BA_FLAMETHROW,		// flamethrower
+	BA_ROLL,			// rolling during combat
+	BA_JETPACK,			// jetpack during combat
+	BA_ANTIKNOCKDOWN,	// anti-knockdown prevention
+	BA_SNIPER,			// can go into sniper mode
+	BA_MISSILE,			// can go into missile mode
+	BA_JUMP,			// jumping during combat
+} bobaability_t;
+
 // !!!!!!!!!! LOADSAVE-affecting structure !!!!!!!!!!
 
 // this structure is cleared on each ClientSpawn(),
@@ -791,6 +802,9 @@ public:
 	int			inSpaceSuffocation;
 	int			inSpaceIndex;
 
+	//disable some flags for boba fett
+	int			bobaDisabledAbilities;
+
 
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
@@ -857,6 +871,7 @@ public:
 		saved_game.write<float>(rocketTargetTime);
 		saved_game.write<int32_t>(inSpaceSuffocation);
 		saved_game.write<int32_t>(inSpaceIndex);
+		saved_game.write<int32_t>(bobaDisabledAbilities);
 	}
 
 	void sg_import(
@@ -924,6 +939,7 @@ public:
 		saved_game.read<float>(rocketTargetTime);
 		saved_game.read<int32_t>(inSpaceSuffocation);
 		saved_game.read<int32_t>(inSpaceIndex);
+		saved_game.read<int32_t>(bobaDisabledAbilities);
 	}
 }; // GClientBase
 
