@@ -536,6 +536,7 @@ void Workshop_Set_Enemy_f(gentity_t* ent) {
 		else {
 			gi.Printf("New enemy: %i\n", g_entities[selectedAI].enemy->s.number);
 		}
+		return;
 	}
 
 	vec3_t		src, dest, vf;
