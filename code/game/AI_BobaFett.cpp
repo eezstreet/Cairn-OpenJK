@@ -383,7 +383,7 @@ qboolean Boba_Flying( gentity_t *self )
 ////////////////////////////////////////////////////////////////////////////////////////
 bool	Boba_CanSeeEnemy( gentity_t *self )
 {
-	assert(self && self->NPC && self->client && self->client->NPC_class==CLASS_BOBAFETT);
+	assert(self && self->NPC && self->client);
  	return ((level.time - self->NPC->enemyLastSeenTime)<1000);
 }
 
@@ -683,6 +683,7 @@ void	Boba_Fire()
 			break;
 
 		case WP_BLASTER:
+		default:
 
 			if (TIMER_Done(NPC, "nextBlasterAltFireDecide"))
 			{
@@ -730,7 +731,9 @@ void Boba_FireDecide( void )
 	//--------------------------
 	if (!NPC ||											// Only NPCs
 		!NPC->client ||									// Only Clients
-		 NPC->client->NPC_class!=CLASS_BOBAFETT ||		// Only Boba
+		 (NPC->client->NPC_class!=CLASS_BOBAFETT &&		// Only Boba
+		  NPC->s.weapon == WP_MELEE ||
+		  NPC->s.weapon == WP_SABER) ||
 		!NPC->enemy ||									// Only If There Is An Enemy
 		 NPC->s.weapon==WP_NONE ||						// Only If Using A Valid Weapon
 		!TIMER_Done(NPC, "nextAttackDelay") ||			// Only If Ready To Shoot Again
@@ -751,12 +754,7 @@ void Boba_FireDecide( void )
 		}
 		break;
 
-	case WP_DISRUPTOR:
-		// TODO: Add Conditions Here
-		Boba_Fire();
-		break;
-
-	case WP_BLASTER:
+	default:
 		// TODO: Add Conditions Here
 		Boba_Fire();
 		break;

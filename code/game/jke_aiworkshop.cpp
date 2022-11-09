@@ -1101,7 +1101,7 @@ void Workshop_List_BobaAbilities_f(gentity_t* ent) {
 	PRINTFLAG(BA_JUMP);
 }
 
-// List all of the 
+// Set available abilities for Boba Fett AI
 void Workshop_Set_BobaAbilities_f(gentity_t * ent) {
 	if (gi.argc() != 2) {
 		gi.Printf("usage: workshop_disable_boba_abilities <flags>\n");
@@ -1116,6 +1116,84 @@ void Workshop_Set_BobaAbilities_f(gentity_t * ent) {
 	}
 	g_entities[selectedAI].client->bobaDisabledAbilities = bobaAbilities;
 }
+
+void Workshop_Toggle_RunForward_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	if (ai->client->forced_forwardmove) {
+		ai->client->forced_forwardmove = 0;
+	} else {
+		ai->client->forced_forwardmove = 127;
+	}
+}
+
+void Workshop_Toggle_RunBackward_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	if (ai->client->forced_forwardmove) {
+		ai->client->forced_forwardmove = 0;
+	} else {
+		ai->client->forced_forwardmove = -128;
+	}
+}
+
+void Workshop_Toggle_RunLeft_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	if (ai->client->forced_rightmove) {
+		ai->client->forced_rightmove = 0;
+	} else {
+		ai->client->forced_rightmove = -128;
+	}
+}
+
+void Workshop_Toggle_RunRight_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	if (ai->client->forced_rightmove) {
+		ai->client->forced_rightmove = 0;
+	} else {
+		ai->client->forced_rightmove = 127;
+	}
+}
+
+void Workshop_Toggle_WalkForward_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	if (ai->client->forced_forwardmove) {
+		ai->client->forced_forwardmove = 0;
+	} else {
+		ai->client->forced_forwardmove = 63;
+	}
+}
+
+void Workshop_Toggle_WalkBackward_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	if (ai->client->forced_forwardmove) {
+		ai->client->forced_forwardmove = 0;
+	} else {
+		ai->client->forced_forwardmove = -63;
+	}
+}
+
+void Workshop_Toggle_WalkLeft_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	if (ai->client->forced_rightmove) {
+		ai->client->forced_rightmove = 0;
+	} else {
+		ai->client->forced_rightmove = -63;
+	}
+}
+
+void Workshop_Toggle_WalkRight_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	if (ai->client->forced_rightmove) {
+		ai->client->forced_rightmove = 0;
+	} else {
+		ai->client->forced_rightmove = 63;
+	}
+}
+
+void Workshop_Toggle_SmartMove_f(gentity_t* ent) {
+	gentity_t* ai = &g_entities[selectedAI];
+	ai->client->smartMovement = !ai->client->smartMovement;
+}
+
 
 // Stubs
 void Workshop_Commands_f(gentity_t* ent);
@@ -1186,6 +1264,15 @@ workshopCmd_t workshopCommands[] = {
 	{ "workshop_shielding", "Toggles a blaster-protecting shield on an NPC.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Shielding_f },
 	{ "workshop_list_boba_abilities", "List all abilities for Boba Fett AI type.", WSFLAG_ONLYINWS, Workshop_List_BobaAbilities_f },
 	{ "workshop_disable_boba_abilities", "CLASS_BOBAFETT only: disable certain abilities", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Set_BobaAbilities_f },
+	{ "workshop_toggle_runforward", "Toggles run-forward.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_RunForward_f },
+	{ "workshop_toggle_runbackward", "Toggles run-backward.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_RunBackward_f },
+	{ "workshop_toggle_runleft", "Toggles run-left", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_RunLeft_f },
+	{ "workshop_toggle_runright", "Toggles run-right", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_RunRight_f },
+	{ "workshop_toggle_walkforward", "Toggles walk-forward.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_WalkForward_f },
+	{ "workshop_toggle_walkbackward", "Toggles walk-backward.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_WalkBackward_f },
+	{ "workshop_toggle_walkleft", "Toggles walk-left.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_WalkLeft_f },
+	{ "workshop_toggle_walkright", "Toggles walk-right.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_WalkRight_f },
+	{ "workshop_toggle_smartmove", "Forces Jedi-like movement behavior.", WSFLAG_ONLYINWS | WSFLAG_NEEDSELECTED, Workshop_Toggle_SmartMove_f },
 	{ "", "", 0, NULL },
 };
 

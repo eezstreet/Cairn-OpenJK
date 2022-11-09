@@ -1392,9 +1392,10 @@ static void Jedi_CombatDistance( int enemy_dist )
 		TIMER_Set( NPC, "attackDelay", Q_irand( 0, 1000 ) );
 	}
 
-	if ( NPC->client->NPC_class == CLASS_BOBAFETT )
+	if ( NPC->client->NPC_class == CLASS_BOBAFETT ||
+		(NPC->client->ps.weapon != WP_SABER || NPC->client->ps.weapon != WP_MELEE))
 	{
-		if ( !TIMER_Done( NPC, "flameTime" ) )
+		if ( NPC->client->NPC_class == CLASS_BOBAFETT && !TIMER_Done( NPC, "flameTime" ) )
 		{
 			if ( enemy_dist > 50 )
 			{
@@ -1410,6 +1411,18 @@ static void Jedi_CombatDistance( int enemy_dist )
 			Jedi_Retreat();
 		}
 		else if ( enemy_dist > 1024 )
+		{
+			Jedi_Advance();
+		}
+	}
+	else if (NPC->enemy != NULL && NPC->client->ps.weapon != WP_SABER && NPC->client->ps.weapon != WP_MELEE)
+	{
+		const int distance = NPC->enemy->client->ps.weapon == WP_SABER ? 500 : 200;
+		if (enemy_dist < distance)
+		{
+			Jedi_Retreat();
+		}
+		else if (enemy_dist > 1024)
 		{
 			Jedi_Advance();
 		}
@@ -5852,7 +5865,7 @@ static void Jedi_Combat( void )
 					//for gravity with my size, see if it makes it...
 					//this will also catch misacalculations that send you off ledges!
 					//gi.Printf( "Considering Jump\n" );
-					if (NPC->client && NPC->client->NPC_class==CLASS_BOBAFETT)
+					if (NPC->client)
 					{
 						Boba_FireDecide();
 					}
@@ -5878,7 +5891,7 @@ static void Jedi_Combat( void )
 						G_AddVoiceEvent( NPC, Q_irand( EV_JLOST1, EV_JLOST3 ), 3000 );
 						jediSpeechDebounceTime[NPC->client->playerTeam] = NPCInfo->blockedSpeechDebounceTime = level.time + 3000;
 					}
-					if (NPC->client && NPC->client->NPC_class==CLASS_BOBAFETT)
+					if (NPC->client)
 					{
 						Boba_FireDecide();
 					}
@@ -5976,13 +5989,13 @@ static void Jedi_Combat( void )
 		else
 		{
 		}
-		if ( NPC->client->NPC_class == CLASS_BOBAFETT )
-		{
-			Boba_FireDecide();
-		}
-		else if ( NPC->client->NPC_class == CLASS_ROCKETTROOPER )
+		if ( NPC->client->NPC_class == CLASS_ROCKETTROOPER )
 		{
 			RT_FireDecide();
+		}
+		else
+		{
+			Boba_FireDecide();
 		}
 	}
 

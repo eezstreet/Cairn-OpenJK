@@ -726,6 +726,7 @@ public:
 	signed char		forced_forwardmove;
 	signed char		forced_rightmove;
 	signed char     forced_upmove;
+	int			smartMovement;
 
 	// timers
 	int			respawnTime;		// can respawn when time > this, force after g_forcerespwan
@@ -872,6 +873,7 @@ public:
 		saved_game.write<int32_t>(inSpaceSuffocation);
 		saved_game.write<int32_t>(inSpaceIndex);
 		saved_game.write<int32_t>(bobaDisabledAbilities);
+		saved_game.write<int32_t>(smartMovement);
 	}
 
 	void sg_import(
@@ -940,6 +942,7 @@ public:
 		saved_game.read<int32_t>(inSpaceSuffocation);
 		saved_game.read<int32_t>(inSpaceIndex);
 		saved_game.read<int32_t>(bobaDisabledAbilities);
+		saved_game.read<int32_t>(smartMovement);
 	}
 }; // GClientBase
 
