@@ -2111,6 +2111,11 @@ qboolean Jedi_DodgeEvasion( gentity_t *self, gentity_t *shooter, trace_t *tr, in
 		return qfalse;
 	}
 
+	if (self->client->smartMovement && self->NPC && self->NPC->rank < RANK_CAPTAIN)
+	{
+		return qfalse; // no bullet dodging unless we are captain
+	}
+
 	if ( self->client->ps.groundEntityNum == ENTITYNUM_NONE )
 	{//can't dodge in mid-air
 		return qfalse;
@@ -2970,6 +2975,11 @@ evasionType_t Jedi_SaberBlockGo( gentity_t *self, usercmd_t *cmd, vec3_t pHitloc
 	evasionType_t	evasionType = EVASION_NONE;
 
 	if ( !self || !self->client )
+	{
+		return EVASION_NONE;
+	}
+
+	if (self->NPC && self->client->smartMovement && self->NPC->rank < RANK_CAPTAIN)
 	{
 		return EVASION_NONE;
 	}
