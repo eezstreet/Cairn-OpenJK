@@ -1903,7 +1903,7 @@ void NPC_RunBehavior( int team, int bState )
 	{//force-only reborn
 		NPC_BehaviorSet_Jedi( bState );
 	}
-	else if (NPC->client->smartMovement)
+	else if (NPC->client->smartMovement )
 	{
 		NPC_BehaviorSet_Jedi(bState);
 	}

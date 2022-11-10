@@ -5943,14 +5943,18 @@ static void Jedi_Combat( void )
 	}
 
 	//if ( !enemy_lost )
- 	if (NPC->client->NPC_class != CLASS_BOBAFETT && !NPC->client->smartMovement)
+ 	if (NPC->client->NPC_class != CLASS_BOBAFETT)
 	{
 		//Update our seen enemy position
 		if ( !NPC->enemy->client || ( NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE && NPC->client->ps.groundEntityNum != ENTITYNUM_NONE ) )
 		{
 			VectorCopy( NPC->enemy->currentOrigin, NPCInfo->enemyLastSeenLocation );
 		}
-		NPCInfo->enemyLastSeenTime = level.time;
+
+		if (!NPC->client->smartMovement || NPC_ClearLOS(NPC->enemy))
+		{
+			NPCInfo->enemyLastSeenTime = level.time;
+		}
 	}
 
 	//Turn to face the enemy
@@ -5982,31 +5986,41 @@ static void Jedi_Combat( void )
 
 	if ( TIMER_Done( NPC, "allyJediDelay" ) )
 	{
-		if ( ( !NPC->client->ps.saberInFlight || (NPC->client->ps.saberAnimLevel == SS_DUAL && NPC->client->ps.saber[1].Active()) )
-			&& (!(NPC->client->ps.forcePowersActive&(1<<FP_GRIP))||NPC->client->ps.forcePowerLevel[FP_GRIP] < FORCE_LEVEL_2) )
-		{//not throwing saber or using force grip
-			//see if we can attack
-			if ( !Jedi_AttackDecide( enemy_dist ) )
-			{//we're not attacking, decide what else to do
-				Jedi_CombatIdle( enemy_dist );
-				//FIXME: lower aggression when actually strike offensively?  Or just when do damage?
+		if (NPC->client->smartMovement)
+		{
+			if (NPC_ClearLOS(NPC->enemy))
+			{
+				WeaponThink(qtrue);
+			}
+		}
+		else
+		{
+			if ((!NPC->client->ps.saberInFlight || (NPC->client->ps.saberAnimLevel == SS_DUAL && NPC->client->ps.saber[1].Active()))
+				&& (!(NPC->client->ps.forcePowersActive & (1 << FP_GRIP)) || NPC->client->ps.forcePowerLevel[FP_GRIP] < FORCE_LEVEL_2))
+			{//not throwing saber or using force grip
+				//see if we can attack
+				if (!Jedi_AttackDecide(enemy_dist))
+				{//we're not attacking, decide what else to do
+					Jedi_CombatIdle(enemy_dist);
+					//FIXME: lower aggression when actually strike offensively?  Or just when do damage?
+				}
+				else
+				{//we are attacking
+					//stop taunting
+					TIMER_Set(NPC, "taunting", -level.time);
+				}
 			}
 			else
-			{//we are attacking
-				//stop taunting
-				TIMER_Set( NPC, "taunting", -level.time );
+			{
 			}
-		}
-		else
-		{
-		}
-		if ( NPC->client->NPC_class == CLASS_ROCKETTROOPER )
-		{
-			RT_FireDecide();
-		}
-		else
-		{
-			Boba_FireDecide();
+			if (NPC->client->NPC_class == CLASS_ROCKETTROOPER)
+			{
+				RT_FireDecide();
+			}
+			else
+			{
+				Boba_FireDecide();
+			}
 		}
 	}
 
@@ -7638,6 +7652,7 @@ void NPC_BSJedi_Default( void )
 	if( !NPC->enemy )
 	{//don't have an enemy, look for one
 		if ( NPC->client->NPC_class == CLASS_BOBAFETT
+			|| NPC->client->smartMovement
 			|| (NPC->client->NPC_class == CLASS_REBORN && NPC->s.weapon != WP_SABER)
 			|| NPC->client->NPC_class == CLASS_ROCKETTROOPER)
 		{
