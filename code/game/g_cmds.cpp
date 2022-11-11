@@ -1361,6 +1361,33 @@ void Cmd_SaberDrop_f( gentity_t *ent, int saberNum )
 }
 
 /*
+================
+Cmd_DropWeapon_f
+================
+*/
+extern void WP_DropWeapon(gentity_t* dropper, vec3_t velocity);
+void Cmd_DropWeapon_f(gentity_t* ent)
+{
+	if (!ent || !ent->client || ent->client->ps.weapon == WP_NONE)
+	{
+		return;
+	}
+
+	if (ent->client->ps.weapon == WP_SABER)
+	{
+		Com_Printf("Sorry, use 'dropsaber' instead for sabers.\n");
+		return;
+	}
+
+	// Make it drop in front of us
+	vec3_t forward;
+	AngleVectors(ent->client->ps.viewangles, forward, NULL, NULL);
+	VectorMA(vec3_origin, 100.0f, forward, forward);
+	ent->client->nextAllowedPickup = level.time + 2000;
+	WP_DropWeapon(ent, forward);
+}
+
+/*
 =================
 ClientCommand
 =================
@@ -1611,6 +1638,10 @@ void ClientCommand( int clientNum ) {
 		{//drop either left or right
 			Cmd_SaberDrop_f( ent, saberNum );
 		}
+	}
+	else if (Q_stricmp(cmd, "dropweapon") == 0)
+	{
+		Cmd_DropWeapon_f(ent);
 	}
     else if (TryWorkshopCommand(ent)) {}
 	else

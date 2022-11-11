@@ -806,6 +806,9 @@ public:
 	//disable some flags for boba fett
 	int			bobaDisabledAbilities;
 
+	//debounce being able to pick stuff up
+	int			nextAllowedPickup;
+
 
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
@@ -874,6 +877,7 @@ public:
 		saved_game.write<int32_t>(inSpaceIndex);
 		saved_game.write<int32_t>(bobaDisabledAbilities);
 		saved_game.write<int32_t>(smartMovement);
+		saved_game.write<int32_t>(nextAllowedPickup);
 	}
 
 	void sg_import(
@@ -943,6 +947,7 @@ public:
 		saved_game.read<int32_t>(inSpaceIndex);
 		saved_game.read<int32_t>(bobaDisabledAbilities);
 		saved_game.read<int32_t>(smartMovement);
+		saved_game.read<int32_t>(nextAllowedPickup);
 	}
 }; // GClientBase
 

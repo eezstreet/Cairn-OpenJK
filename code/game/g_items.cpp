@@ -738,6 +738,11 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 		return;
 	}
 
+	if (other->client->nextAllowedPickup > level.time)
+	{
+		return; // not allowed to pick it up right now
+	}
+
 	// NPCs can pick it up
 	if ((ent->spawnflags &  ITMSF_ALLOWNPC) && (!other->s.number))
 	{
