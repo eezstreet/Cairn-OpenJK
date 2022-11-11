@@ -5821,6 +5821,7 @@ void RT_CheckJump( void )
 ////////////////////////////////////////////////////////////////////////////////////////
 //
 ////////////////////////////////////////////////////////////////////////////////////////
+extern void NPC_AimAdjust(int change);
 static void Jedi_Combat( void )
 {
 	vec3_t	enemy_dir, enemy_movedir, enemy_dest;
@@ -5990,6 +5991,7 @@ static void Jedi_Combat( void )
 		{
 			if (NPC_ClearLOS(NPC->enemy))
 			{
+				NPC_AimAdjust(2); // aim better, scrub :)
 				WeaponThink(qtrue);
 			}
 		}
