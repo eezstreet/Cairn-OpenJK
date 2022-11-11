@@ -1395,6 +1395,7 @@ static void Jedi_CombatDistance( int enemy_dist )
 	if ( NPC->client->NPC_class == CLASS_BOBAFETT ||
 		(NPC->client->ps.weapon != WP_SABER || NPC->client->ps.weapon != WP_MELEE))
 	{
+		const int distance = NPC->enemy->client->ps.weapon == WP_SABER ? 500 : 200;
 		if ( NPC->client->NPC_class == CLASS_BOBAFETT && !TIMER_Done( NPC, "flameTime" ) )
 		{
 			if ( enemy_dist > 50 )
@@ -1406,23 +1407,11 @@ static void Jedi_CombatDistance( int enemy_dist )
 				Jedi_Retreat();
 			}
 		}
-		else if ( enemy_dist < 200 )
+		else if ( enemy_dist < distance )
 		{
 			Jedi_Retreat();
 		}
 		else if ( enemy_dist > 1024 )
-		{
-			Jedi_Advance();
-		}
-	}
-	else if (NPC->enemy != NULL && NPC->client->ps.weapon != WP_SABER && NPC->client->ps.weapon != WP_MELEE)
-	{
-		const int distance = NPC->enemy->client->ps.weapon == WP_SABER ? 500 : 200;
-		if (enemy_dist < distance)
-		{
-			Jedi_Retreat();
-		}
-		else if (enemy_dist > 1024)
 		{
 			Jedi_Advance();
 		}
@@ -4947,7 +4936,7 @@ static void Jedi_TimersApply( void )
 		//FIXME: if enemy behind me and turning to face enemy, don't strafe in that direction, too
 		if ( !TIMER_Done( NPC, "strafeLeft" ) )
 		{
-			if ( NPCInfo->desiredYaw > NPC->client->ps.viewangles[YAW] + 60 )
+			if ( !NPC->client->smartMovement && NPCInfo->desiredYaw > NPC->client->ps.viewangles[YAW] + 60 )
 			{//we want to turn left, don't apply the strafing
 			}
 			else
@@ -4958,7 +4947,7 @@ static void Jedi_TimersApply( void )
 		}
 		else if ( !TIMER_Done( NPC, "strafeRight" ) )
 		{
-			if ( NPCInfo->desiredYaw < NPC->client->ps.viewangles[YAW] - 60 )
+			if ( !NPC->client->smartMovement && NPCInfo->desiredYaw < NPC->client->ps.viewangles[YAW] - 60 )
 			{//we want to turn right, don't apply the strafing
 			}
 			else
@@ -5037,7 +5026,7 @@ static void Jedi_CombatTimersUpdate( int enemy_dist )
 					Jedi_Aggression( NPC, 1 );
 				}
 				//He's closer than a dist that gives us time to deflect
-				if ( enemy_dist < 256 )
+				if ( (NPC->s.weapon != WP_MELEE && NPC->s.weapon != WP_SABER) || enemy_dist < 256 )
 				{
 					//Com_Printf( "(%d) raise agg - enemy ranged weap- too close\n", level.time );
 					Jedi_Aggression( NPC, 1 );
