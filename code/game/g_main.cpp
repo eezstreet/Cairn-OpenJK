@@ -226,6 +226,7 @@ cvar_t	*g_broadsword;
 cvar_t	*g_allowBunnyhopping;
 
 cvar_t	*g_noAutoFollow;
+cvar_t  *g_skipTouchPickup;
 
 qboolean	stop_icarus = qfalse;
 
@@ -702,6 +703,7 @@ void G_InitCvars( void ) {
 	g_allowBunnyhopping = gi.cvar( "g_allowBunnyhopping", "0", 0 );
 
 	g_noAutoFollow = gi.cvar("g_noAutoFollow", "0", CVAR_ARCHIVE);
+	g_skipTouchPickup = gi.cvar("g_skipTouchPickup", "0", CVAR_ARCHIVE|CVAR_SAVEGAME);
 
 	gi.cvar( "tier_storyinfo", "0", CVAR_ROM|CVAR_SAVEGAME|CVAR_NORESTART);
 	gi.cvar( "tiers_complete", "", CVAR_ROM|CVAR_SAVEGAME|CVAR_NORESTART);

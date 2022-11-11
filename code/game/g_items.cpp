@@ -811,6 +811,14 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 		return;
 	}
 
+	if (other->s.number == 0 && // person who touched it is a player
+		g_skipTouchPickup->integer & (1 << (ent->item->giType - 1)) && // skip touch cvar masks this
+		trace != NULL // we touched it - if we used with use key, trace is null :)
+		)
+	{
+		return; // not allowed to pick this up as per g_skipTouchPickup
+	}
+
 	if ( ent->item->giType == IT_WEAPON
 		&& ent->item->giTag == WP_SABER )
 	{//a saber
@@ -953,6 +961,9 @@ gentity_t *LaunchItem( gitem_t *item, const vec3_t origin, const vec3_t velocity
 
 	dropped->classname = G_NewString(item->classname);	//copy it so it can be freed safely
 	dropped->item = item;
+
+	dropped->e_UseFunc = useF_Use_Item;
+	dropped->svFlags |= SVF_PLAYER_USABLE;//so player can pick it up
 
 	// try using the "correct" mins/maxs first
 	VectorSet( dropped->mins, item->mins[0], item->mins[1], item->mins[2] );
