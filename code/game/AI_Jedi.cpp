@@ -1393,7 +1393,9 @@ static void Jedi_CombatDistance( int enemy_dist )
 	}
 
 	if ( NPC->client->NPC_class == CLASS_BOBAFETT ||
-		(NPC->client->ps.weapon != WP_SABER || NPC->client->ps.weapon != WP_MELEE))
+		(TIMER_Done(NPC, "moveforward") && TIMER_Done(NPC, "moveback") &&
+			(NPC->client->ps.weapon != WP_SABER || NPC->client->ps.weapon != WP_MELEE))
+		)
 	{
 		const int distance = NPC->enemy->client->ps.weapon == WP_SABER ? 500 : 200;
 		if ( NPC->client->NPC_class == CLASS_BOBAFETT && !TIMER_Done( NPC, "flameTime" ) )
@@ -4815,7 +4817,7 @@ static void Jedi_DebounceDirectionChanges( void )
 		else
 		{//NOTE: edge checking should stop me if this is bad...
 			//if being forced to move back, do a full-speed moveback
-			ucmd.forwardmove = -127;
+			ucmd.forwardmove = Q_irand(0, 1) ? -127 : 127;
 			VectorClear( NPC->client->ps.moveDir );
 		}
 	}
@@ -5041,9 +5043,19 @@ static void Jedi_CombatTimersUpdate( int enemy_dist )
 	if ( TIMER_Done( NPC, "noStrafe" ) && TIMER_Done( NPC, "strafeLeft" ) && TIMER_Done( NPC, "strafeRight" ) )
 	{
 		//FIXME: Maybe more likely to do this if aggression higher?  Or some other stat?
-		if ( !Q_irand( 0, 4 ) )
+		if ( NPC->client->smartMovement || !Q_irand( 0, 4 ) )
 		{//start a strafe
-			if ( Jedi_Strafe( 1000, 3000, 0, 4000, qtrue ) )
+			if (enemy_dist > 300 && Q_irand(0, 1))
+			{
+				ucmd.forwardmove = 127;
+				TIMER_Set(NPC, "moveforward", Q_irand(250, 1000));
+			}
+			else if (enemy_dist < 300 && Q_irand(0, 1))
+			{
+				ucmd.forwardmove = -127;
+				TIMER_Set(NPC, "moveback", Q_irand(250, 1000));
+			}
+			else if ( Jedi_Strafe( 1000, 3000, 0, 1000, qtrue ) )
 			{
 				if ( d_JediAI->integer )
 				{
