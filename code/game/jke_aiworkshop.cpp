@@ -1086,7 +1086,14 @@ void Workshop_Toggle_Follow_f(gentity_t* ent) {
 	}
 	else
 	{
-		ai->client->leader = &g_entities[0];
+		if (ent->client->ps.viewEntity > 0 && ent->client->ps.viewEntity < ENTITYNUM_WORLD)
+		{
+			ai->client->leader = &g_entities[ent->client->ps.viewEntity];
+		}
+		else
+		{
+			ai->client->leader = &g_entities[0];
+		}
 		ai->NPC->defaultBehavior = BS_FOLLOW_LEADER;
 		ai->NPC->behaviorState = BS_FOLLOW_LEADER;
 	}
