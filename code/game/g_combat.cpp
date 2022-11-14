@@ -179,9 +179,6 @@ gentity_t *TossClientItems( gentity_t *self )
 			}
 		}
 	}
-	else if ( weapon == WP_BLASTER_PISTOL )
-	{//FIXME: either drop the pistol and make the pickup only give ammo or drop ammo
-	}
 	else if ( weapon == WP_STUN_BATON
 		|| weapon == WP_MELEE )
 	{//never drop these
